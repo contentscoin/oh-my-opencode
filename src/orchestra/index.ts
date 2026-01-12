@@ -24,3 +24,12 @@ export {
     initOrchestrator,
     BUILTIN_BMAD_AGENTS,
 } from "./bmad-orchestrator"
+
+// Config Loader
+export {
+    loadConfig,
+    saveConfig,
+    initConfig,
+    validateConfig,
+    DEFAULT_ORCHESTRA_CONFIG,
+} from "./config-loader"

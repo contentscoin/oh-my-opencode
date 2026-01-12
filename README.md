@@ -134,6 +134,7 @@
     - [LSP](#lsp)
     - [Experimental](#experimental)
     - [Environment Variables](#environment-variables)
+  - [BMAD Orchestra](#bmad-orchestra)
   - [Author's Note](#authors-note)
   - [Warnings](#warnings)
   - [Loved by professionals at](#loved-by-professionals-at)
@@ -1221,6 +1222,42 @@ If this sounds arrogant and you have a better answer, please contribute. You're 
 I have no affiliation with any project or model mentioned here. This is purely personal experimentation and preference.
 
 99% of this project was built using OpenCode. I tested for functionality—I don't really know how to write proper TypeScript. **But I personally reviewed and largely rewrote this doc, so read with confidence.**
+
+## BMAD Orchestra
+
+> 🎭 **병렬 AI 에이전트 오케스트레이션 시스템**
+
+BMAD Orchestra는 여러 AI 에이전트를 병렬로 조율하여 복잡한 개발 작업을 효율적으로 처리하는 시스템입니다.
+
+### 핵심 기능
+
+- **총괄 에이전트 중심** - 사용자는 Sisyphus(총괄)와만 소통, 서브 에이전트 자동 조율
+- **자동 병렬 실행** - 작업 복잡도 분석 후 최적의 에이전트 수 자동 결정
+- **LLM 모델 라우팅** - 에이전트별 최적 모델 자동 선택
+- **무료 계정 우선** - 무료 계정 우선 사용, 유료는 옵션
+- **사용자 커스터마이징** - 설정 파일로 모델, 에이전트 구성 변경
+
+### BMAD 에이전트
+
+| 아이콘 | 이름 | 역할 |
+|-------|------|------|
+| 🧠 | Atlas | AI/LLM 아키텍트 |
+| 🔗 | Hermes | 에이전트 연동 전문가 |
+| 🏛️ | Prometheus | OpenCode 아키텍트 |
+| ⚡ | Hephaestus | TypeScript 개발자 |
+| 🔍 | Athena | 코드베이스 분석가 |
+
+### 사용법
+
+```typescript
+import { getOrchestrator } from "./src/orchestra"
+
+const orchestrator = getOrchestrator()
+const assignments = orchestrator.analyzeAndRoute("TypeScript API 개발")
+const results = await orchestrator.executeParallel(assignments)
+```
+
+📖 **상세 문서**: [src/orchestra/README.md](./src/orchestra/README.md)
 
 ## Warnings
 

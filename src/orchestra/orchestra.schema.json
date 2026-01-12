@@ -1,0 +1,91 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "BMAD Orchestra Configuration",
+    "description": "BMAD 에이전트 오케스트라 설정 스키마",
+    "type": "object",
+    "properties": {
+        "version": {
+            "type": "integer",
+            "description": "설정 파일 버전",
+            "default": 1
+        },
+        "agents": {
+            "type": "object",
+            "description": "에이전트별 설정 (사용자 커스터마이징)",
+            "additionalProperties": {
+                "type": "object",
+                "properties": {
+                    "model": {
+                        "type": "string",
+                        "description": "사용할 LLM 모델 (예: anthropic/claude-opus-4, google/gemini-2.5-pro)",
+                        "examples": [
+                            "anthropic/claude-opus-4",
+                            "google/gemini-2.5-pro",
+                            "openai/gpt-4o"
+                        ]
+                    },
+                    "role": {
+                        "type": "string",
+                        "enum": [
+                            "orchestrator",
+                            "architect",
+                            "integrator",
+                            "developer",
+                            "analyst",
+                            "specialist"
+                        ],
+                        "description": "에이전트 역할"
+                    },
+                    "enabled": {
+                        "type": "boolean",
+                        "description": "에이전트 활성화 여부",
+                        "default": true
+                    },
+                    "customPrompt": {
+                        "type": "string",
+                        "description": "커스텀 시스템 프롬프트 (선택사항)"
+                    }
+                }
+            }
+        },
+        "orchestration": {
+            "type": "object",
+            "description": "오케스트레이션 설정",
+            "properties": {
+                "autoParallel": {
+                    "type": "boolean",
+                    "description": "총괄 에이전트가 병렬 실행 자동 판단",
+                    "default": true
+                },
+                "maxConcurrent": {
+                    "type": "integer",
+                    "description": "최대 동시 에이전트 수 (자동 판단 시 상한선)",
+                    "default": 5,
+                    "minimum": 1,
+                    "maximum": 10
+                },
+                "timeoutMs": {
+                    "type": "integer",
+                    "description": "태스크 타임아웃 (밀리초)",
+                    "default": 300000
+                }
+            }
+        },
+        "accounts": {
+            "type": "object",
+            "description": "계정 관리 설정",
+            "properties": {
+                "preferFreeAccounts": {
+                    "type": "boolean",
+                    "description": "무료 계정 우선 사용",
+                    "default": true
+                },
+                "allowPaidFallback": {
+                    "type": "boolean",
+                    "description": "무료 계정 소진 시 유료 계정 사용 허용",
+                    "default": true
+                }
+            }
+        }
+    }
+}

@@ -39,17 +39,33 @@ function isRateLimitedForFamily(account: ManagedAccount, family: ModelFamily): b
   return resetTime !== undefined && Date.now() < resetTime
 }
 
+/**
+ * 계정 관리자 설정
+ */
+export interface AccountManagerConfig {
+  /** 무료 계정 우선 사용 (기본: true) */
+  preferFreeAccounts: boolean
+  /** 유료 계정 폴백 허용 (기본: true) */
+  allowPaidFallback: boolean
+}
+
+const DEFAULT_CONFIG: AccountManagerConfig = {
+  preferFreeAccounts: true,
+  allowPaidFallback: true,
+}
+
 export class AccountManager {
   private accounts: ManagedAccount[] = []
   private currentIndex = 0
   private activeIndex = 0
+  private config: AccountManagerConfig = DEFAULT_CONFIG
 
   constructor(auth: AuthDetails, storedAccounts?: AccountStorage | null) {
     if (storedAccounts && storedAccounts.accounts.length > 0) {
       const validActiveIndex =
         typeof storedAccounts.activeIndex === "number" &&
-        storedAccounts.activeIndex >= 0 &&
-        storedAccounts.activeIndex < storedAccounts.accounts.length
+          storedAccounts.activeIndex >= 0 &&
+          storedAccounts.activeIndex < storedAccounts.accounts.length
           ? storedAccounts.activeIndex
           : 0
 
@@ -101,23 +117,44 @@ export class AccountManager {
     return [...this.accounts]
   }
 
+  /**
+   * 오케스트라 설정 적용
+   */
+  setConfig(config: Partial<AccountManagerConfig>): void {
+    this.config = { ...this.config, ...config }
+  }
+
+  /**
+   * 현재 설정 조회
+   */
+  getConfig(): AccountManagerConfig {
+    return { ...this.config }
+  }
+
+  /**
+   * 모델 패밀리에 맞는 계정 선택
+   * 무료 계정 우선 정책 적용
+   */
   getCurrentOrNextForFamily(family: ModelFamily): ManagedAccount | null {
     for (const account of this.accounts) {
       this.clearExpiredRateLimits(account)
     }
 
     const current = this.getCurrentAccount()
-    if (current) {
-      if (!isRateLimitedForFamily(current, family)) {
-        const betterTierAvailable =
-          current.tier !== "paid" &&
-          this.accounts.some((a) => a.tier === "paid" && !isRateLimitedForFamily(a, family))
-
-        if (!betterTierAvailable) {
-          current.lastUsed = Date.now()
-          return current
+    if (current && !isRateLimitedForFamily(current, family)) {
+      // 무료 계정 우선 정책: 현재 계정이 유료인데 무료 계정이 사용 가능하면 전환
+      if (this.config.preferFreeAccounts && current.tier === "paid") {
+        const freeAvailable = this.accounts.find(
+          (a) => a.tier === "free" && !isRateLimitedForFamily(a, family)
+        )
+        if (freeAvailable) {
+          freeAvailable.lastUsed = Date.now()
+          this.activeIndex = freeAvailable.index
+          return freeAvailable
         }
       }
+      current.lastUsed = Date.now()
+      return current
     }
 
     const next = this.getNextForFamily(family)
@@ -127,6 +164,9 @@ export class AccountManager {
     return next
   }
 
+  /**
+   * 다음 사용 가능한 계정 선택 (무료 계정 우선)
+   */
   getNextForFamily(family: ModelFamily): ManagedAccount | null {
     const available = this.accounts.filter((a) => !isRateLimitedForFamily(a, family))
 
@@ -134,10 +174,27 @@ export class AccountManager {
       return null
     }
 
-    const paidAvailable = available.filter((a) => a.tier === "paid")
-    const pool = paidAvailable.length > 0 ? paidAvailable : available
+    // 무료 계정 우선 정책
+    if (this.config.preferFreeAccounts) {
+      const freeAvailable = available.filter((a) => a.tier === "free")
 
-    const account = pool[this.currentIndex % pool.length]
+      if (freeAvailable.length > 0) {
+        const account = freeAvailable[this.currentIndex % freeAvailable.length]
+        if (account) {
+          this.currentIndex++
+          account.lastUsed = Date.now()
+          return account
+        }
+      }
+
+      // 무료 계정 없으면 유료 계정 폴백 (옵션)
+      if (!this.config.allowPaidFallback) {
+        return null
+      }
+    }
+
+    // 기본 로직: 모든 사용 가능한 계정 중 선택
+    const account = available[this.currentIndex % available.length]
     if (!account) {
       return null
     }
@@ -145,6 +202,39 @@ export class AccountManager {
     this.currentIndex++
     account.lastUsed = Date.now()
     return account
+  }
+
+  /**
+   * 계정 사용 통계 조회
+   */
+  getUsageStats(): { total: number; free: number; paid: number; rateLimited: number } {
+    let free = 0
+    let paid = 0
+    let rateLimited = 0
+
+    for (const account of this.accounts) {
+      if (account.tier === "paid") {
+        paid++
+      } else {
+        free++
+      }
+
+      // Rate limited 여부 체크 (모든 패밀리)
+      const isLimited = MODEL_FAMILIES.some(family => isRateLimitedForFamily(account, family))
+      if (isLimited) {
+        rateLimited++
+      }
+    }
+
+    return { total: this.accounts.length, free, paid, rateLimited }
+  }
+
+  /**
+   * 계정 요약 정보
+   */
+  getSummary(): string {
+    const stats = this.getUsageStats()
+    return `계정: ${stats.total}개 (무료: ${stats.free}, 유료: ${stats.paid}, Rate Limited: ${stats.rateLimited})`
   }
 
   markRateLimited(account: ManagedAccount, retryAfterMs: number, family: ModelFamily): void {

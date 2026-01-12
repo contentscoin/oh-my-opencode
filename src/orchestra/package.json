@@ -1,0 +1,45 @@
+{
+    "name": "bmad-orchestra",
+    "version": "1.0.0",
+    "description": "BMAD 에이전트 오케스트라 - 병렬 AI 에이전트 오케스트레이션 시스템",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "bin": {
+        "bmad": "./dist/cli.js"
+    },
+    "files": [
+        "dist",
+        "README.md"
+    ],
+    "scripts": {
+        "build": "bun build src/orchestra/index.ts --outdir dist --target node",
+        "build:cli": "bun build src/orchestra/cli.ts --outfile dist/cli.js --target node",
+        "build:all": "npm run build && npm run build:cli",
+        "prepublishOnly": "npm run build:all"
+    },
+    "keywords": [
+        "ai",
+        "agent",
+        "orchestration",
+        "llm",
+        "bmad",
+        "parallel",
+        "antigravity"
+    ],
+    "author": "",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/your-repo/bmad-orchestra"
+    },
+    "engines": {
+        "node": ">=18.0.0"
+    },
+    "peerDependencies": {
+        "typescript": "^5.0.0"
+    },
+    "devDependencies": {
+        "@types/node": "^20.0.0",
+        "typescript": "^5.0.0"
+    }
+}

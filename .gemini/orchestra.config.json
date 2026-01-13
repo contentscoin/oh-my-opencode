@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "agents": {
+    "atlas": {
+      "model": "anthropic/claude-opus-4",
+      "role": "architect",
+      "enabled": true
+    },
+    "hermes": {
+      "model": "google/gemini-2.5-pro",
+      "role": "integrator",
+      "enabled": true
+    },
+    "prometheus": {
+      "model": "anthropic/claude-sonnet-4",
+      "role": "architect",
+      "enabled": true
+    },
+    "hephaestus": {
+      "model": "openai/gpt-4o",
+      "role": "developer",
+      "enabled": true
+    },
+    "athena": {
+      "model": "google/gemini-2.5-pro",
+      "role": "analyst",
+      "enabled": true
+    }
+  },
+  "orchestration": {
+    "autoParallel": true,
+    "maxConcurrent": 5,
+    "timeoutMs": 300000
+  },
+  "accounts": {
+    "preferFreeAccounts": true,
+    "allowPaidFallback": true
+  }
+}

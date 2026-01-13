@@ -28,7 +28,10 @@
     "clean": "rm -rf dist",
     "prepublishOnly": "bun run clean && bun run build",
     "typecheck": "tsc --noEmit",
-    "test": "bun test"
+    "test": "bun test",
+    "bmad:refresh": "bmad-method install -f -i codex",
+    "bmad:list": "bmad-method list:agents",
+    "bmad:validate": "bmad-method validate"
   },
   "keywords": [
     "opencode",

@@ -1,0 +1,12 @@
+{
+    "mcpServers": {
+        "bmad-orchestra": {
+            "command": "npx",
+            "args": [
+                "tsx",
+                "c:\\Users\\USER\\Documents\\antigravity\\omo\\oh-my-opencode\\src\\mcp-server\\index.ts"
+            ],
+            "env": {}
+        }
+    }
+}

@@ -23,6 +23,10 @@ export const builtinAgents: Record<string, AgentConfig> = {
   "orchestrator-sisyphus": orchestratorSisyphusAgent,
 }
 
+export * from "./atlas"
+export * from "./hermes"
+export * from "./hephaestus"
+export * from "./athena"
 export * from "./types"
 export { createBuiltinAgents } from "./utils"
 export type { AvailableAgent } from "./sisyphus-prompt-builder"

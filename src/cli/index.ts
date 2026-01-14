@@ -9,6 +9,7 @@ import type { InstallArgs } from "./types"
 import type { RunOptions } from "./run"
 import type { GetLocalVersionOptions } from "./get-local-version/types"
 import type { DoctorOptions } from "./doctor"
+import { launchSisyphus } from "./sisyphus/launcher"
 
 const packageJson = await import("../../package.json")
 const VERSION = packageJson.version
@@ -133,6 +134,20 @@ Categories:
     }
     const exitCode = await doctor(doctorOptions)
     process.exit(exitCode)
+  })
+const sisyphusCommand = program
+  .command("sisyphus <task>")
+  .description("Launch a disconnected background Sisyphus daemon for a task")
+  .option("--hidden", "Hide the background window (Windows only)", true)
+  .option("--gsd", "Enable GSD (Get Shit Done) mode for relentless execution")
+  .addHelpText("after", `
+Examples:
+  $ bunx oh-my-opencode sisyphus "Refactor the login page"
+  $ bunx oh-my-opencode sisyphus "Analyze the entire codebase"
+  `)
+
+  .action((task) => {
+    launchSisyphus(task);
   })
 
 const authCommand = program

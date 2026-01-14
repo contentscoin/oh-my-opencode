@@ -10,6 +10,10 @@ import { createMultimodalLookerAgent, MULTIMODAL_LOOKER_PROMPT_METADATA } from "
 import { createMetisAgent } from "./metis"
 import { createOrchestratorSisyphusAgent, orchestratorSisyphusAgent } from "./orchestrator-sisyphus"
 import { createMomusAgent } from "./momus"
+import { createAtlasAgent, ATLAS_PROMPT_METADATA } from "./atlas"
+import { createHermesAgent, HERMES_PROMPT_METADATA } from "./hermes"
+import { createHephaestusAgent, HEPHAESTUS_PROMPT_METADATA } from "./hephaestus"
+import { createAthenaAgent, ATHENA_PROMPT_METADATA } from "./athena"
 import type { AvailableAgent } from "./sisyphus-prompt-builder"
 import { deepMerge } from "../shared"
 import { DEFAULT_CATEGORIES } from "../tools/sisyphus-task/constants"
@@ -28,6 +32,10 @@ const agentSources: Record<BuiltinAgentName, AgentSource> = {
   "Metis (Plan Consultant)": createMetisAgent,
   "Momus (Plan Reviewer)": createMomusAgent,
   "orchestrator-sisyphus": orchestratorSisyphusAgent,
+  atlas: createAtlasAgent,
+  hermes: createHermesAgent,
+  hephaestus: createHephaestusAgent,
+  athena: createAthenaAgent,
 }
 
 /**
@@ -41,6 +49,10 @@ const agentMetadata: Partial<Record<BuiltinAgentName, AgentPromptMetadata>> = {
   "frontend-ui-ux-engineer": FRONTEND_PROMPT_METADATA,
   "document-writer": DOCUMENT_WRITER_PROMPT_METADATA,
   "multimodal-looker": MULTIMODAL_LOOKER_PROMPT_METADATA,
+  atlas: ATLAS_PROMPT_METADATA,
+  hermes: HERMES_PROMPT_METADATA,
+  hephaestus: HEPHAESTUS_PROMPT_METADATA,
+  athena: ATHENA_PROMPT_METADATA,
 }
 
 function isFactory(source: AgentSource): source is AgentFactory {

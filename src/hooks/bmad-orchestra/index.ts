@@ -4,8 +4,8 @@
  * OpenCode 훅 시스템과 BMAD 오케스트레이터 통합
  */
 
-import type { OrchestraEvent } from "../orchestra/types"
-import { getOrchestrator } from "../orchestra/bmad-orchestrator"
+import type { OrchestraEvent, AgentAssignment } from "../../orchestra/types"
+import { getOrchestrator } from "../../orchestra/bmad-orchestrator"
 
 // ============================================================================
 // Hook Context Types
@@ -118,7 +118,7 @@ export function userPromptSubmitHook(context: HookContext): HookResult {
             const analysisMessage = `
 [BMAD Orchestra 분석]
 ${complexity.reasoning}
-추천 에이전트: ${assignments.map(a => {
+추천 에이전트: ${assignments.map((a: AgentAssignment) => {
                 const agent = orchestrator.getAgent(a.agentId)
                 return agent ? `${agent.icon} ${agent.name}` : a.agentId
             }).join(", ")}

@@ -1259,6 +1259,49 @@ const results = await orchestrator.executeParallel(assignments)
 
 📖 **상세 문서**: [src/orchestra/README.md](./src/orchestra/README.md)
 
+### B:Essential 팀 통합
+
+[bessential-Multi-agent-orchestration](https://github.com/Roykoo83/bessential-Multi-agent-orchestration) 기반의 팀 구조가 통합되었습니다.
+
+| ID | 에이전트 | 역할 |
+|----|---------|------|
+| 10 | MIR | 마케팅 마스터 (콘텐츠 전략, OSMU) |
+| 20 | ROY | 개발 마스터 (풀스택, 대시보드) |
+
+#### TypeScript 에이전트 사용
+
+```typescript
+import { mirAgent, royAgent } from "./agents"
+
+// MIR: 마케팅 작업
+// ROY: 개발 작업
+```
+
+#### Gemini CLI 연동
+
+```typescript
+import { executeGeminiPrompt, geminiMirPrompt, geminiRoyPrompt } from "./agents"
+
+// 기본 프롬프트
+await executeGeminiPrompt("Hello, Gemini!")
+
+// MIR 컨텍스트로 마케팅 작업
+await geminiMirPrompt("블로그 콘텐츠 전략 수립해줘")
+
+// ROY 컨텍스트로 개발 작업
+await geminiRoyPrompt("React 컴포넌트 만들어줘")
+```
+
+#### tmux 브릿지 (WSL/macOS)
+
+```typescript
+import { delegateToMir, delegateToRoy, startBessentialAgents } from "./agents"
+
+await startBessentialAgents()
+await delegateToMir("OSMU 콘텐츠 생성해줘")
+await delegateToRoy("대시보드 만들어줘")
+```
+
 ## Warnings
 
 - Productivity might spike too hard. Don't let your coworker notice.

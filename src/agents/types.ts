@@ -10,7 +10,7 @@ export type AgentCategory = "exploration" | "specialist" | "advisor" | "utility"
 /**
  * Cost classification for Tool Selection table
  */
-export type AgentCost = "FREE" | "CHEAP" | "EXPENSIVE"
+export type AgentCost = "FREE" | "CHEAP" | "MEDIUM" | "EXPENSIVE"
 
 /**
  * Delegation trigger for Sisyphus prompt's Delegation Table
@@ -71,6 +71,8 @@ export type BuiltinAgentName =
   | "hermes"
   | "hephaestus"
   | "athena"
+  | "mir"
+  | "roy"
 
 export type OverridableAgentName =
   | "build"

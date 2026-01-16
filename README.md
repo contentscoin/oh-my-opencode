@@ -15,11 +15,32 @@
 
 ## 👥 B:Essential 에이전트 팀
 
+JIAN(총괄)의 지휘 아래, 각 분야의 마스터 에이전트들이 협업합니다.
+
 | ID | 에이전트 | 역할 | 전문 분야 |
 |----|---------|------|-----------|
 | **00** | **JIAN** | Orchestrator | 전체 작업 조율 및 관리 |
 | **10** | **MIR** | Marketing Master | 콘텐츠 전략, OSMU, 시장 분석, SEO |
 | **20** | **ROY** | Developer Master | 풀스택 개발, 아키텍처, 디버깅 |
+
+---
+
+## 🏛️ BMAD Orchestra & Sisyphus
+
+Sisyphus는 이 모든 에이전트를 지휘하는 **최상위 오케스트레이터**(Opus 4.5 High)입니다.
+
+### Sisyphus의 참모진 (Specially Curated Agents)
+
+| 에이전트 | 모델 | 역할 |
+|----|------|------|
+| **Sisyphus** | Claude Opus 4.5 | **총괄 지휘**. 작업 계획, 위임, 검증, 끊임없는 실행. |
+| **Atlas** | GPT-5.2 | **아키텍트**. 구조 설계, 기술 스택 결정. |
+| **Hermes** | Claude Sonnet | **통합/메신저**. 에이전트 간 소통 및 문맥 관리. |
+| **Hephaestus** | GPT-5.2-Codex | **구현 전문가**. TypeScript/React 코딩 및 리팩토링. |
+| **Athena** | Claude Haiku | **품질 관리**. 코드 리뷰, 테스트 생성, 버그 탐지. |
+
+> **B:Essential**은 Sisyphus가 외부의 강력한 **Gemini CLI 군단(JIAN, MIR, ROY)** 을 활용하기 위해 통합한 확장 팀입니다.
+
 
 ---
 

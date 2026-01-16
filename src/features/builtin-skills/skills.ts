@@ -1225,6 +1225,66 @@ POTENTIAL ACTIONS:
 - Bisect without proper good/bad boundaries -> Wasted time`,
 }
 
+// Agent-specific skills (loaded from SKILL.md files)
+const sisyphusOrchestrationSkill: BuiltinSkill = {
+  name: "sisyphus-orchestration",
+  description: "멀티에이전트 오케스트레이션 전문 스킬. 복잡한 작업을 분해하고, 적절한 에이전트에게 위임하며, 결과를 통합. 트리거: 'orchestrate', 'coordinate', 'delegate', 'multi-agent', '오케스트레이션', '조율', '위임'.",
+  template: `# Sisyphus Orchestration
+This skill enables multi-agent orchestration capabilities.
+See SKILL.md in sisyphus-orchestration folder for full instructions.`,
+}
+
+const llmEngineeringSkill: BuiltinSkill = {
+  name: "llm-engineering",
+  description: "LLM 통합, 프롬프트 엔지니어링, 토큰 최적화 전문 스킬 (Atlas). 트리거: 'prompt', 'llm', 'gpt', 'claude', 'gemini', '프롬프트', '토큰', 'token optimization'.",
+  template: `# LLM Engineering (Atlas)
+Expert skill for LLM integration, prompt engineering, and token optimization.
+See SKILL.md in llm-engineering folder for full instructions.`,
+}
+
+const integrationMasterSkill: BuiltinSkill = {
+  name: "integration-master",
+  description: "MCP 서버 개발, OAuth 통합, API 연동 전문 스킬 (Hermes). 트리거: 'mcp', 'oauth', 'api', 'integration', '연동', '통합', 'plugin'.",
+  template: `# Integration Master (Hermes)
+Expert skill for MCP server development, OAuth integration, and API connectivity.
+See SKILL.md in integration-master folder for full instructions.`,
+}
+
+const architectureDesignSkill: BuiltinSkill = {
+  name: "architecture-design",
+  description: "시스템 아키텍처 분석, 설계 패턴 적용, 의존성 관리 전문 스킬 (Prometheus). 트리거: 'architecture', '아키텍처', 'design', '설계', 'structure', '구조', 'pattern'.",
+  template: `# Architecture Design (Prometheus)
+Expert skill for system architecture analysis, design patterns, and dependency management.
+See SKILL.md in architecture-design folder for full instructions.`,
+}
+
+const typescriptMasterSkill: BuiltinSkill = {
+  name: "typescript-master",
+  description: "TypeScript/React 개발, 테스트 작성, 번들링 전문 스킬 (Hephaestus). 트리거: 'typescript', 'react', 'component', 'test', '컴포넌트', '테스트', 'bun', 'node'.",
+  template: `# TypeScript Master (Hephaestus)
+Expert skill for TypeScript/React development, testing, and bundling.
+See SKILL.md in typescript-master folder for full instructions.`,
+}
+
+const codeAnalysisSkill: BuiltinSkill = {
+  name: "code-analysis",
+  description: "코드 품질 분석, 리팩토링 전략, 기술 문서화 전문 스킬 (Athena). 트리거: 'analyze', '분석', 'refactor', '리팩토링', 'document', '문서', 'review', '리뷰', 'quality'.",
+  template: `# Code Analysis (Athena)
+Expert skill for code quality analysis, refactoring strategies, and technical documentation.
+See SKILL.md in code-analysis folder for full instructions.`,
+}
+
 export function createBuiltinSkills(): BuiltinSkill[] {
-  return [playwrightSkill, frontendUiUxSkill, gitMasterSkill]
+  return [
+    playwrightSkill,
+    frontendUiUxSkill,
+    gitMasterSkill,
+    // Agent-specific skills
+    sisyphusOrchestrationSkill,
+    llmEngineeringSkill,
+    integrationMasterSkill,
+    architectureDesignSkill,
+    typescriptMasterSkill,
+    codeAnalysisSkill,
+  ]
 }

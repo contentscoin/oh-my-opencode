@@ -17,6 +17,87 @@ export interface AvailableSkill {
   location: "user" | "project" | "plugin"
 }
 
+// Skill-Agent Auto-Matching Configuration
+export interface SkillAgentMapping {
+  skill: string
+  agent: string
+  triggers: string[]
+  category: "orchestration" | "llm" | "integration" | "architecture" | "development" | "analysis" | "git" | "frontend"
+}
+
+export const SKILL_AGENT_MAPPINGS: SkillAgentMapping[] = [
+  {
+    skill: "sisyphus-orchestration",
+    agent: "sisyphus",
+    triggers: ["orchestrate", "coordinate", "delegate", "multi-agent", "오케스트레이션", "조율", "위임", "ultrawork"],
+    category: "orchestration",
+  },
+  {
+    skill: "llm-engineering",
+    agent: "atlas",
+    triggers: ["prompt", "llm", "gpt", "claude", "gemini", "프롬프트", "토큰", "token", "model selection", "모델 선택"],
+    category: "llm",
+  },
+  {
+    skill: "integration-master",
+    agent: "hermes",
+    triggers: ["mcp", "oauth", "api", "integration", "연동", "통합", "plugin", "플러그인", "webhook"],
+    category: "integration",
+  },
+  {
+    skill: "architecture-design",
+    agent: "prometheus",
+    triggers: ["architecture", "아키텍처", "design", "설계", "structure", "구조", "pattern", "패턴", "dependency"],
+    category: "architecture",
+  },
+  {
+    skill: "typescript-master",
+    agent: "hephaestus",
+    triggers: ["typescript", "react", "component", "test", "컴포넌트", "테스트", "bun", "node", "vitest", "jest"],
+    category: "development",
+  },
+  {
+    skill: "code-analysis",
+    agent: "athena",
+    triggers: ["analyze", "분석", "refactor", "리팩토링", "document", "문서", "review", "리뷰", "quality", "품질"],
+    category: "analysis",
+  },
+  {
+    skill: "git-master",
+    agent: "sisyphus",
+    triggers: ["commit", "커밋", "rebase", "리베이스", "squash", "git", "blame", "bisect"],
+    category: "git",
+  },
+  {
+    skill: "frontend-ui-ux",
+    agent: "frontend-ui-ux-engineer",
+    triggers: ["ui", "ux", "design", "디자인", "styling", "스타일", "animation", "애니메이션", "visual"],
+    category: "frontend",
+  },
+]
+
+// Auto-match skill and agent based on user request
+export function matchSkillAndAgent(userRequest: string): SkillAgentMapping | null {
+  const lowerRequest = userRequest.toLowerCase()
+
+  for (const mapping of SKILL_AGENT_MAPPINGS) {
+    for (const trigger of mapping.triggers) {
+      if (lowerRequest.includes(trigger.toLowerCase())) {
+        return mapping
+      }
+    }
+  }
+
+  return null
+}
+
+// Get all skills for a specific agent
+export function getSkillsForAgent(agentName: string): string[] {
+  return SKILL_AGENT_MAPPINGS
+    .filter(m => m.agent === agentName)
+    .map(m => m.skill)
+}
+
 export function categorizeTools(toolNames: string[]): AvailableTool[] {
   return toolNames.map((name) => {
     let category: AvailableTool["category"] = "other"
@@ -80,6 +161,80 @@ ${allTriggers.join("\n")}
 - **"Look into" + "create PR"** → Not just research. Full implementation cycle expected.`
 }
 
+// Build Skill-Agent Auto-Routing Section
+export function buildSkillAgentRoutingSection(): string {
+  const rows: string[] = []
+
+  for (const mapping of SKILL_AGENT_MAPPINGS) {
+    const triggers = mapping.triggers.slice(0, 4).map(t => `'${t}'`).join(", ")
+    rows.push(`| \`${mapping.skill}\` | \`${mapping.agent}\` | ${triggers} |`)
+  }
+
+  return `### Skill-Agent Auto-Routing (MANDATORY)
+
+**CRITICAL: When ANY trigger keyword is detected, AUTOMATICALLY:**
+1. Load the matching skill
+2. Delegate to the assigned agent
+3. Include the skill in the delegation prompt
+
+#### Routing Table
+
+| Skill | Agent | Trigger Keywords |
+|-------|-------|------------------|
+${rows.join("\n")}
+
+#### Auto-Routing Workflow
+
+\`\`\`
+User Request → Trigger Detection → Skill Match → Agent Delegation
+                     ↓
+              "MCP 서버 만들어줘"
+                     ↓
+        Trigger: "mcp" detected
+                     ↓
+        Skill: integration-master
+        Agent: hermes
+                     ↓
+        sisyphus_task(
+          agent="hermes",
+          skills=["integration-master"],
+          prompt="MCP 서버 만들어줘..."
+        )
+\`\`\`
+
+#### Multi-Skill Scenarios
+
+When multiple triggers match, use ALL relevant skills:
+
+\`\`\`
+"React 컴포넌트 리팩토링해줘"
+  → Triggers: "react", "리팩토링"
+  → Skills: typescript-master + code-analysis
+  → Agent: hephaestus (primary), athena (review)
+  
+sisyphus_task(
+  agent="hephaestus",
+  skills=["typescript-master", "code-analysis"],
+  prompt="React 컴포넌트 리팩토링..."
+)
+\`\`\`
+
+#### BMAD Agent + Skill Combinations
+
+| Agent | Primary Skill | When to Use |
+|-------|---------------|-------------|
+| 🧠 Atlas | llm-engineering | 프롬프트, LLM, 토큰 최적화 |
+| 🔗 Hermes | integration-master | MCP, OAuth, API, 외부 연동 |
+| 🏛️ Prometheus | architecture-design | 아키텍처, 설계 패턴, 의존성 |
+| ⚡ Hephaestus | typescript-master | TypeScript, React, 테스트 |
+| 🔍 Athena | code-analysis | 분석, 리팩토링, 문서화 |
+
+**NO SILENT ROUTING**: Always announce when auto-routing:
+\`\`\`
+트리거 감지: "mcp" → integration-master 스킬 + Hermes 에이전트로 위임합니다.
+\`\`\``
+}
+
 function extractTriggerFromDescription(description: string): string {
   const triggerMatch = description.match(/Trigger[s]?[:\s]+([^.]+)/i)
   if (triggerMatch) return triggerMatch[1].trim()
@@ -129,10 +284,10 @@ export function buildToolSelectionTable(
     rows.push(`| ${toolsDisplay} | FREE | Not Complex, Scope Clear, No Implicit Assumptions |`)
   }
 
-  const costOrder = { FREE: 0, CHEAP: 1, EXPENSIVE: 2 }
+  const costOrder: Record<string, number> = { FREE: 0, CHEAP: 1, MEDIUM: 2, EXPENSIVE: 3 }
   const sortedAgents = [...agents]
     .filter((a) => a.metadata.category !== "utility")
-    .sort((a, b) => costOrder[a.metadata.cost] - costOrder[b.metadata.cost])
+    .sort((a, b) => (costOrder[a.metadata.cost] ?? 99) - (costOrder[b.metadata.cost] ?? 99))
 
   for (const agent of sortedAgents) {
     const shortDesc = agent.description.split(".")[0] || agent.description

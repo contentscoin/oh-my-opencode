@@ -11,6 +11,7 @@ import {
   buildOracleSection,
   buildHardBlocksSection,
   buildAntiPatternsSection,
+  buildSkillAgentRoutingSection,
   categorizeTools,
 } from "./sisyphus-prompt-builder"
 
@@ -533,6 +534,7 @@ function buildDynamicSisyphusPrompt(
   const librarianSection = buildLibrarianSection(availableAgents)
   const frontendSection = buildFrontendSection(availableAgents)
   const delegationTable = buildDelegationTable(availableAgents)
+  const skillAgentRouting = buildSkillAgentRoutingSection()
   const oracleSection = buildOracleSection(availableAgents)
   const hardBlocks = buildHardBlocksSection(availableAgents)
   const antiPatterns = buildAntiPatternsSection(availableAgents)
@@ -572,6 +574,8 @@ function buildDynamicSisyphusPrompt(
     frontendSection,
     "",
     delegationTable,
+    "",
+    skillAgentRouting,
     "",
     SISYPHUS_DELEGATION_PROMPT_STRUCTURE,
     "",

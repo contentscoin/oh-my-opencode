@@ -28,6 +28,17 @@ $ARGUMENTS
 </user-task>`,
     argumentHint: '"task description" [--completion-promise=TEXT] [--max-iterations=N]',
   },
+  "ulw-loop": {
+    description: "(builtin) Start ultrawork loop - continues until completion with ultrawork mode",
+    template: `<command-instruction>
+${RALPH_LOOP_TEMPLATE}
+</command-instruction>
+
+<user-task>
+$ARGUMENTS
+</user-task>`,
+    argumentHint: '"task description" [--completion-promise=TEXT] [--max-iterations=N]',
+  },
   "cancel-ralph": {
     description: "(builtin) Cancel active Ralph Loop",
     template: `<command-instruction>
@@ -44,7 +55,7 @@ ${REFACTOR_TEMPLATE}
   },
   "start-work": {
     description: "(builtin) Start Sisyphus work session from Prometheus plan",
-    agent: "orchestrator-sisyphus",
+    agent: "atlas",
     template: `<command-instruction>
 ${START_WORK_TEMPLATE}
 </command-instruction>
@@ -70,7 +81,7 @@ export function loadBuiltinCommands(
   for (const [name, definition] of Object.entries(BUILTIN_COMMAND_DEFINITIONS)) {
     if (!disabled.has(name as BuiltinCommandName)) {
       const { argumentHint: _argumentHint, ...openCodeCompatible } = definition
-      commands[name] = openCodeCompatible as CommandDefinition
+      commands[name] = { ...openCodeCompatible, name } as CommandDefinition
     }
   }
 

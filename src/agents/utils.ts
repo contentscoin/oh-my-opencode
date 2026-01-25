@@ -14,6 +14,8 @@ import { createAtlasAgent, ATLAS_PROMPT_METADATA } from "./atlas"
 import { createHermesAgent, HERMES_PROMPT_METADATA } from "./hermes"
 import { createHephaestusAgent, HEPHAESTUS_PROMPT_METADATA } from "./hephaestus"
 import { createAthenaAgent, ATHENA_PROMPT_METADATA } from "./athena"
+import { createMirAgent, MIR_PROMPT_METADATA } from "./mir"
+import { createRoyAgent, ROY_PROMPT_METADATA } from "./roy"
 import type { AvailableAgent } from "./sisyphus-prompt-builder"
 import { deepMerge } from "../shared"
 import { DEFAULT_CATEGORIES } from "../tools/sisyphus-task/constants"
@@ -36,6 +38,8 @@ const agentSources: Record<BuiltinAgentName, AgentSource> = {
   hermes: createHermesAgent,
   hephaestus: createHephaestusAgent,
   athena: createAthenaAgent,
+  mir: createMirAgent,
+  roy: createRoyAgent,
 }
 
 /**
@@ -53,6 +57,8 @@ const agentMetadata: Partial<Record<BuiltinAgentName, AgentPromptMetadata>> = {
   hermes: HERMES_PROMPT_METADATA,
   hephaestus: HEPHAESTUS_PROMPT_METADATA,
   athena: ATHENA_PROMPT_METADATA,
+  mir: MIR_PROMPT_METADATA,
+  roy: ROY_PROMPT_METADATA,
 }
 
 function isFactory(source: AgentSource): source is AgentFactory {

@@ -27,6 +27,12 @@ export const BuiltinAgentNameSchema = z.enum([
   "Metis (Plan Consultant)",
   "Momus (Plan Reviewer)",
   "orchestrator-sisyphus",
+  "atlas",
+  "hermes",
+  "hephaestus",
+  "athena",
+  "mir",
+  "roy",
 ])
 
 export const BuiltinSkillNameSchema = z.enum([
@@ -132,6 +138,12 @@ export const AgentOverridesSchema = z.object({
   "document-writer": AgentOverrideConfigSchema.optional(),
   "multimodal-looker": AgentOverrideConfigSchema.optional(),
   "orchestrator-sisyphus": AgentOverrideConfigSchema.optional(),
+  atlas: AgentOverrideConfigSchema.optional(),
+  hermes: AgentOverrideConfigSchema.optional(),
+  hephaestus: AgentOverrideConfigSchema.optional(),
+  athena: AgentOverrideConfigSchema.optional(),
+  mir: AgentOverrideConfigSchema.optional(),
+  roy: AgentOverrideConfigSchema.optional(),
 })
 
 export const ClaudeCodeConfigSchema = z.object({

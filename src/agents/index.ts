@@ -9,6 +9,12 @@ import { multimodalLookerAgent } from "./multimodal-looker"
 import { metisAgent } from "./metis"
 import { orchestratorSisyphusAgent } from "./orchestrator-sisyphus"
 import { momusAgent } from "./momus"
+import { atlasAgent } from "./atlas"
+import { hermesAgent } from "./hermes"
+import { hephaestusAgent } from "./hephaestus"
+import { athenaAgent } from "./athena"
+import { mirAgent } from "./mir"
+import { royAgent } from "./roy"
 
 export const builtinAgents: Record<string, AgentConfig> = {
   Sisyphus: sisyphusAgent,
@@ -21,6 +27,12 @@ export const builtinAgents: Record<string, AgentConfig> = {
   "Metis (Plan Consultant)": metisAgent,
   "Momus (Plan Reviewer)": momusAgent,
   "orchestrator-sisyphus": orchestratorSisyphusAgent,
+  atlas: atlasAgent,
+  hermes: hermesAgent,
+  hephaestus: hephaestusAgent,
+  athena: athenaAgent,
+  mir: mirAgent,
+  roy: royAgent,
 }
 
 export * from "./atlas"
@@ -35,3 +47,4 @@ export * from "./gemini-cli"
 export * from "./types"
 export { createBuiltinAgents } from "./utils"
 export type { AvailableAgent } from "./sisyphus-prompt-builder"
+

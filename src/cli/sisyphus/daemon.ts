@@ -28,64 +28,45 @@ interface AgentResponse {
 // Auth & Network Layer
 // ============================================================================
 
+// ============================================================================
+// Brain Link Layer (File-based AI Bridge)
+// ============================================================================
+
+const BRAIN_LINK_FILE = path.resolve(process.cwd(), 'brain_link.json');
+
 async function getAccessToken(): Promise<string | null> {
-    try {
-        const homeDir = os.homedir();
-        const storagePath = path.join(homeDir, ".local", "share", "opencode", "oh-my-opencode-accounts.json");
-
-        const content = await fs.readFile(storagePath, "utf-8");
-        const data = JSON.parse(content);
-
-        if (data.accounts && data.accounts.length > 0) {
-            // Simply take the first available token for now
-            // In a full implementation, we'd use the AccountManager logic
-            return data.accounts[0].accessToken;
-        }
-    } catch (e) {
-        // Fallback for debugging/dev environments
-        if (process.env.ANTIGRAVITY_ACCESS_TOKEN) {
-            return process.env.ANTIGRAVITY_ACCESS_TOKEN;
-        }
-        console.error("Failed to load auth token:", e);
-    }
-    return null;
+    return "BRAIN_LINK_DUMMY_TOKEN";
 }
 
 async function callAgent(agentName: string, agentSystemPrompt: string, userMessage: string, token: string): Promise<AgentResponse> {
-    const EPOCH_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent";
-
-    const body = {
-        contents: [{
-            role: "user",
-            parts: [{ text: `[System: You are ${agentName}. ${agentSystemPrompt}]\n\nUser: ${userMessage}` }]
-        }],
-        generationConfig: {
-            temperature: 0.2, // Structured output
-            maxOutputTokens: 8192
-        }
+    const payload = {
+        agent: agentName,
+        system: agentSystemPrompt,
+        message: userMessage,
+        status: "pending",
+        response: null,
+        timestamp: Date.now()
     };
 
-    try {
-        const response = await fetch(EPOCH_ENDPOINT, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}` // Antigravity/Gemini Auth
-            },
-            body: JSON.stringify(body)
-        });
+    // 1. Write Request
+    await fs.writeFile(BRAIN_LINK_FILE, JSON.stringify(payload, null, 2));
 
-        if (!response.ok) {
-            const errText = await response.text();
-            throw new Error(`API Call Failed: ${response.status} - ${errText}`);
+    // 2. Poll for Response
+    console.log(`[Brain Link] Waiting for Antigravity response for ${agentName}...`);
+
+    while (true) {
+        await new Promise(resolve => setTimeout(resolve, 2000)); // Poll every 2s
+
+        try {
+            const content = await fs.readFile(BRAIN_LINK_FILE, "utf-8");
+            const data = JSON.parse(content);
+
+            if (data.status === "completed" && data.response) {
+                return { text: data.response };
+            }
+        } catch (e) {
+            // Ignore read errors (race conditions)
         }
-
-        const data = await response.json() as any;
-        const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "No response generated.";
-
-        return { text };
-    } catch (error) {
-        return { text: `[Error calling ${agentName}]: ${error}` };
     }
 }
 
@@ -190,15 +171,22 @@ export class OrchestraDaemon {
 
 // Entry Point
 if (import.meta.main) { // Bun/ESM check
-    const args = process.argv.slice(2);
-    const gsdIndex = args.indexOf('--gsd');
-    let gsdMode = false;
+    console.log("[DEBUG] Daemon process started");
+    console.log("[DEBUG] Arguments:", process.argv);
+    try {
+        const args = process.argv.slice(2);
+        const gsdIndex = args.indexOf('--gsd');
+        let gsdMode = false;
 
-    if (gsdIndex !== -1) {
-        gsdMode = true;
-        args.splice(gsdIndex, 1); // Remove flag from task args
+        if (gsdIndex !== -1) {
+            gsdMode = true;
+            args.splice(gsdIndex, 1); // Remove flag from task args
+        }
+
+        const task = args[0] || "Default Task";
+        new OrchestraDaemon().run(task, gsdMode);
+    } catch (err) {
+        console.error("[DEBUG] Daemon crashed:", err);
+        process.exit(1);
     }
-
-    const task = args[0] || "Default Task";
-    new OrchestraDaemon().run(task, gsdMode);
 }

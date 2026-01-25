@@ -33,6 +33,7 @@ export const ANTIGRAVITY_SCOPES = [
   "https://www.googleapis.com/auth/userinfo.profile",
   "https://www.googleapis.com/auth/cclog",
   "https://www.googleapis.com/auth/experimentsandconfigs",
+  "https://www.googleapis.com/auth/generative-language",
 ] as const
 
 // API Endpoint Fallbacks - matches CLIProxyAPI antigravity_executor.go:1192-1201
